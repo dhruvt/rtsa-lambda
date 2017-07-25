@@ -1,13 +1,16 @@
 package com.aws.gaming.lambda;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.Assert;
-
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.events.S3Event;
+import com.amazonaws.services.s3.event.S3EventNotification.S3EventNotificationRecord;
 import com.aws.gaming.lambda.RTSALambda.RTSAResponse;
 
 /**
@@ -15,13 +18,16 @@ import com.aws.gaming.lambda.RTSALambda.RTSAResponse;
  */
 public class RTSALambdaTest {
 
-    private static RegisterUserRequest goodInput;
-    private static RegisterUserRequest badInput;
+    private static S3Event goodInput;
+    
 
     @BeforeClass
     public static void createInput() throws IOException {
-        goodInput = new RegisterUserRequest("testUser","password123","testUser@email.com");
-        badInput = new RegisterUserRequest(null,"password123","testUser@email.com");
+    	S3EventNotificationRecord record = new S3EventNotificationRecord("us-west-2","ObjectCreated:Put",
+    										"aws:s3","1970-01-01T00:00:00.000Z","2.0",null,null,null,null);
+    	List<S3EventNotificationRecord> records = new ArrayList<S3EventNotificationRecord>();
+    	records.add(record);
+        goodInput = new S3Event(records);        
     }
 
     private Context createContext() {
@@ -47,16 +53,5 @@ public class RTSALambdaTest {
         	Assert.assertTrue(response.getResponseCode().equals(200));
         }
     }
-    
-    @Test
-    public void testInvalidRegisterUser() {
-        RTSALambda handler = new RTSALambda();
-        Context context = createContext();
-
-        RTSAResponse response = handler.handleRequest(badInput, context);
-        
-        if (response != null) {
-        	Assert.assertTrue(response.getResponseCode().equals(500));
-        }
-    }
+       
 }

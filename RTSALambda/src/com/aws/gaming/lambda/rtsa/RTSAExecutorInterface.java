@@ -3,6 +3,7 @@ package com.aws.gaming.lambda.rtsa;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import com.amazonaws.services.rekognition.model.S3Object;
 import com.aws.gaming.lambda.rtsa.data.RTSADataPoint;
 
 
@@ -28,6 +29,6 @@ public interface RTSAExecutorInterface {
 	 * @throws InterruptedException
 	 * @throws ExecutionException
 	 */
-	public List<RTSADataPoint> runFacialAnalysis(List<Object> framesList) throws InterruptedException, ExecutionException;
+	public List<RTSADataPoint> runFacialAnalysis(List<S3Object> framesList) throws InterruptedException, ExecutionException;
 
 }
