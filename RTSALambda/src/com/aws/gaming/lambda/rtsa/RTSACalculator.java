@@ -63,7 +63,7 @@ public class RTSACalculator {
 			public int compare(Emotion e1, Emotion e2){
 				if(e1.getConfidence()==e2.getConfidence())
 					return 0;
-				return e1.getConfidence()<e2.getConfidence()?-1:1;
+				return e1.getConfidence()>e2.getConfidence()?-1:1;
 			}
 		});
 		

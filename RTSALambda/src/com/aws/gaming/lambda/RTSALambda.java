@@ -26,6 +26,9 @@ public class RTSALambda implements RequestHandler<S3Event, RTSAResponse> {
     	for (S3EventNotificationRecord record : input.getRecords()) {
             String s3Key = record.getS3().getObject().getKey();
             String s3Bucket = record.getS3().getBucket().getName();
+            
+            System.out.println("Received File:" + s3Key + " inside S3 Bucket: " + s3Bucket);
+            
             S3Object s3Object = new S3Object();
             s3Object.setBucket(s3Bucket);
             s3Object.setName(s3Key);
@@ -37,6 +40,7 @@ public class RTSALambda implements RequestHandler<S3Event, RTSAResponse> {
     		results = rtsaExecutor.runFacialAnalysis(s3ObjectList);
     		RTSADataPointDAO rtsaDAO = new RTSADataPointKinesisDAOImpl();
     		for(RTSADataPoint dataPoint:results){
+    			System.out.println("Saving Data Point - Emotion:" + dataPoint.getEmotion() + " with Confidence: " + dataPoint.getConfidence());
     			rtsaDAO.save(dataPoint);
     		}
     	}catch(Exception e){
